@@ -11,3 +11,93 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+a {
+  text-decoration: none;
+  color: inherit;
+}
+h1{
+  font-size: 2rem;
+  text-align: center;
+  margin: 1rem 0;
+}
+
+
+.thingsToDo{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size:150%;
+  font-style: bold;
+  color: purple;
+  text-align: center;
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 2px solid teal;
+  background-color: lightblue;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.filmSearch{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  text-align: center;
+  align-items: center;
+  flex-direction: column;
+  color: teal;
+  font-size: large;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-radius: 10px;
+  border: 2px solid teal;
+  padding: 1rem;
+  container: center;
+
+}
+.filmResults{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  border-radius: 20px;
+  border: 2px solid teal;
+  margin: 0 2rem;
+  padding: 1rem;
+}
+.filmDetails{
+  border: 2px solid teal;
+  border-radius: 10px;
+  margin: 1rem;
+  padding: 1rem;
+  text-align: center;
+  background-color: lightblue;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.filmDetails button{
+  background-color: mediumaquamarine;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+.filmDetails button:hover{
+  background-color: #FF7F7F;
+}
+.filmDetails button:disabled{
+  background-color: grey;
+  cursor: not-allowed;
+}
+.filmDetails h2{
+  margin: 0.5rem 0;
+}
+.filmDetails p{
+  margin: 0.25rem 0;
+}
+.searchForm{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
