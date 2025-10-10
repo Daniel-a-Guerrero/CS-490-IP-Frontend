@@ -3,11 +3,13 @@ import TopFive from "../components/TopFive";
 import SelectedTop from '../components/SelectedTop';
 import TopFiveA from '../components/TopFiveA';
 import TopActorTopFilms from '../components/TopActorTopFilms';
+import ActorDetails from '../components/ActorDetails';
 function Landing(){
     const [films, setFilms] = useState([])
     const [actors, setActors] = useState([])
     const [selectedFilm, setSelectedFilm] = useState(null)
     const [actorFilms, setActorFilms] = useState([])
+    const [selectedActor, setSelectedActor] = useState(null)
     useEffect(()=>{
         const fetchTopFive = async ()=>{
             const response = await fetch('http://localhost:3000/api/films/top5')
@@ -45,10 +47,13 @@ function Landing(){
     const handleActor = async(actor_id)=>{
         console.log('Clicked actor ',actor_id)
         console.log(`${actor_id}`)
-        const response = await fetch(`http://localhost:3000/api/films/top5C/${actor_id}`)
+        const response = await fetch(`http://localhost:3000/api/films/actor/${actor_id}`)
         const json = await response.json()
         if(response.ok){
-            setActorFilms(json); // store it somewhere
+            console.log(json.topFilms)
+            setActorFilms(json.topFilms); // store it somewhere
+            setSelectedActor(json.actor)
+            console.log(actorFilms)
         }
     }
 
@@ -85,11 +90,18 @@ function Landing(){
                     </div>
                 ))}
             </div>
+            <div className='actorDetails'>
+            {selectedActor && (
+                <div>
+                    <ActorDetails actor={selectedActor}/>
+                    </div>)}
+            </div>
             <div className='actorFilms'>
-            {actorFilms.items && actorFilms.items.map((topFilm)=>(
+            {actorFilms && actorFilms.map((topFilm)=>(
                     <div
                     key={topFilm.film_id}
                     >
+                        {console.log("Top actor's top films: ", topFilm)}
                     <TopActorTopFilms topFilm={topFilm}/>
                     </div>
                 ))}
