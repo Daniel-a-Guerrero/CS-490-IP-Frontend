@@ -35,6 +35,14 @@ function Films(){
             console.log('Rented films:', rentedFilms)
         }
     }
+    const getTopAvailableFilm=async(film_id)=>{
+        const response = await fetch(`http://localhost:3000/api/films/unrented/${film_id}`)
+        const json = await response.json()
+        if(response.ok){
+            console.log(json)
+            return json
+        }
+    }
     useEffect(()=>{ //put rented film IDs in an array when page loads
         getRentedFilms()
     }, [])
@@ -78,7 +86,7 @@ function Films(){
                 <div className='filmDetails'>
                     <SelectedTop film={{selectedFilm}}/>
                     {console.log(rentedFilms.includes(selectedFilm.film_id))}
-                    <button disabled={rentedFilms.includes(selectedFilm.film_id)}>Rent</button>
+                    <button disabled={rentedFilms.includes(selectedFilm.film_id)} onClick={(e)=>{e.preventDefault(getTopAvailableFilm(selectedFilm.film_id))}} >Rent</button>
                 </div>
             )}
                     
