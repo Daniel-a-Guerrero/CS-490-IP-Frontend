@@ -187,6 +187,28 @@ function Customers(){
                 setBaseCall('customers');
             }
 }
+    const submitEdit = async (updatedCustomer) => {
+    try {
+        updatedCustomer.email=`${updatedCustomer.first_name}.${updatedCustomer.last_name}@sakilacustomer.org`
+        console.log(`http://localhost:3000/api/films/customer/${updatedCustomer.customer_id}`)
+        const response = await fetch(`http://localhost:3000/api/films/customer/${updatedCustomer.customer_id}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({first_name:updatedCustomer.first_name,last_name:updatedCustomer.last_name, email:updatedCustomer.email}),
+        });
+        if (!response.ok) throw new Error('Failed to update customer');
+        const data = await response.json();
+
+        // update UI after save
+        setSearchResults((prev) =>
+            prev.map(c => c.customer_id === updatedCustomer.customer_id ? updatedCustomer : c)
+        );
+        setEditingCustomer(null);
+      } catch (err) {
+        console.error('Error updating customer:', err);
+      }
+    };
+
     useEffect(() => {
         const fetchCountriesAndAddr = async()=>
     {
@@ -244,7 +266,7 @@ function Customers(){
                     onChange={(e)=>{setSearchTerm(e.target.value)}}
                     type="text"
                     placeholder="Enter search term"/>
-                    <button type="submit">Search Customers</button>
+                    <button type="submit" disabled={searchBy==="skip"}>Search Customers</button>
             </form>
             {showSearchResults && (
                 <div className="customerList searchResults">
@@ -261,6 +283,22 @@ function Customers(){
                         <p><strong>Active:</strong> {customer?.active ? 'Yes' : 'No'}</p>
                         <p><strong>Create Date:</strong> {new Date(customer?.create_date).toLocaleDateString()}</p>
                         {customer?.last_update && <p><strong>Last Update:</strong> {new Date(customer?.last_update).toLocaleDateString()}</p>}
+
+                        {editingCustomer === customer.customer_id && (
+                            <div className="editForm">
+                                <input
+                                name="first_name"
+                                value={editForm.first_name}
+                                onChange={(e)=>setEditForm({...editForm, first_name: e.target.value.toUpperCase()})}/>
+                                <input
+                                  name="last_name"
+                                  value={editForm.last_name}
+                                  onChange={(e) => setEditForm({...editForm, last_name: e.target.value.toUpperCase()})}
+                                />
+                                <button onClick={() => {submitEdit(editForm)}}>Save</button>
+                                <button onClick={() => setEditingCustomer(null)}>Cancel</button>
+                            </div>
+                        )}
                     </div>
                 )) : (
                         <p>No customers found for that query.</p>

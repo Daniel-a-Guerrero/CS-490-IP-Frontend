@@ -5,7 +5,15 @@ function Films(){
     const [searchTerm, setSearchTerm] = useState('')
     const [films, setFilms] = useState([])
     const [rentedFilms, setRentedFilms] = useState(null) //array of rented film IDs
+    const [customers, setCustomers]=useState([])
+    const [rentalCustomer, setRentalCustomer]=useState(0)
+    const [rental, setRental]=useState({inventory_id:0,customer_id:0})
+    const [isRenting, setIsRenting]=useState(false)
 
+    const handleRentalCu=(e)=>{
+        setRentalCustomer(e.target.value)
+        console.log(e.target.value)
+    }
     const handleSearchByChange = (e) => {
         setSearchBy(e.target.value)
     }
@@ -17,9 +25,9 @@ function Films(){
             const response = await fetch(`http://localhost:3000/api/films/search/${searchBy}/${encodeURIComponent(searchTerm)}`)
             const json = await response.json()
             if(response.ok){
-                console.log(json)
+                //console.log(json)
                 setFilms(json.item)
-                console.log('Films API response:',films)
+                //console.log('Films API response:',films)
             }
         }
         
@@ -30,21 +38,65 @@ function Films(){
         if(response.ok){
             let rentedFilmsArray = [];
             rentedFilmsArray = json.items.map(item=>item.film_id);
-            console.log(rentedFilmsArray)
+            //console.log(rentedFilmsArray)
             setRentedFilms(rentedFilmsArray); //array of rented film IDs
-            console.log('Rented films:', rentedFilms)
+            //console.log('Rented films:', rentedFilms)
         }
     }
     const getTopAvailableFilm=async(film_id)=>{
-        const response = await fetch(`http://localhost:3000/api/films/unrented/${film_id}`)
-        const json = await response.json()
-        if(response.ok){
-            console.log(json)
-            return json
+        if (!rentalCustomer){
+          console.log('Select a customer first.');
+          return;
         }
+        try{
+        const response = await fetch(`http://localhost:3000/api/films/unrented/${film_id}`)
+        if (!response.ok) {
+            console.log('no available inventory found for this film');
+            setIsRenting(false);
+            return;}
+        const json = await response.json()
+        if(json.inventory_id){
+            console.log(json)
+            console.log({inventory_id:json.inventory_id,customer_id:rentalCustomer})
+            setRental({inventory_id:json.inventory_id,customer_id:rentalCustomer})
+            try{
+            const response2=await fetch(`http://localhost:3000/api/films/rentals`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({inventory_id:json.inventory_id,customer_id:rentalCustomer})
+                })
+                if(!response2.ok){setIsRenting(false);
+                    throw new Error('Network response was not ok');}
+                const data2 = await response2.json();
+                console.log("data:", data2)
+                try{
+                    const response3=await fetch(`http://localhost:3000/api/films/rented`)
+                    const data3=await response3.json()
+                    if(response.ok){
+                            let rentedFilmsArray = [];
+                            rentedFilmsArray = data3.items.map(item=>item.film_id);
+                            //console.log(rentedFilmsArray)
+                            setRentedFilms(rentedFilmsArray); //array of rented film IDs
+                            //console.log('Rented films:', rentedFilms)
+                        }
+                }catch(error){console.error('Error getting rents:',error);}
+            }catch(error){console.error('Error adding rent:',error);}
+        }else {console.log('no available inventory found for this film');}
+    }catch(error){console.error('Error adding rent:',error);}finally{setIsRenting(false)}
+    }
+    const fetchCustomers= async ()=>{
+        try{
+        const response1=await fetch('http://localhost:3000/api/films/allCustomers')
+        if(!response1.ok){ throw new Error('Network response was not ok');}
+        const data=await response1.json()
+        setCustomers(data.items)}
+        catch(error){console.error('Error fetching customers:', error);}
     }
     useEffect(()=>{ //put rented film IDs in an array when page loads
         getRentedFilms()
+        fetchCustomers()
     }, [])
     return(
         <div>
@@ -55,6 +107,12 @@ function Films(){
                 <li>View details of the film</li>
                 <li>Rent out a film to a customer</li>
             </ol>
+            <select name="rentForCustomer" onChange={handleRentalCu} id="rentForCustomer">
+                        <option key={0} value={0}></option>
+                        {customers && customers.map((cu)=>(
+                            <option key={cu.customer_id} value={cu.customer_id}>{cu.customer_id}: {cu.email}</option>
+                        ))}
+                    </select>
             <div className="filmSearch">
                 <form className="searchForm">
                     <label htmlFor="searchBy">Search by:</label>
@@ -86,7 +144,7 @@ function Films(){
                 <div className='filmDetails'>
                     <SelectedTop film={{selectedFilm}}/>
                     {console.log(rentedFilms.includes(selectedFilm.film_id))}
-                    <button disabled={rentedFilms.includes(selectedFilm.film_id)} onClick={(e)=>{e.preventDefault(getTopAvailableFilm(selectedFilm.film_id))}} >Rent</button>
+                    <button disabled={rentalCustomer==0||rentedFilms.includes(selectedFilm.film_id)||isRenting} onClick={(e)=>{e.preventDefault(getTopAvailableFilm(selectedFilm.film_id))}} >{isRenting ? 'Renting...' : 'Rent'}</button>
                 </div>
             )}
                     
