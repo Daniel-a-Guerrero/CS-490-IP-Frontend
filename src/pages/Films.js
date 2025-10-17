@@ -17,6 +17,7 @@ function Films(){
     const handleSearchByChange = (e) => {
         setSearchBy(e.target.value)
     }
+
         const fetchFilms = async ()=>{
             //console.log('Searching for', searchTerm, 'by', searchBy)
             //console.log(`http://localhost:3000/api/films/search/${searchBy}/${encodeURI(searchTerm)}`)
@@ -99,6 +100,7 @@ function Films(){
         fetchCustomers()
     }, [])
     return(
+        <div className='principalDiv'>
         <div>
             <h1>Welcome to video rental webiste films page!</h1>
             <label htmlFor="thingsToDo">Things you can do as a customer:</label>
@@ -153,6 +155,73 @@ function Films(){
                 ))}
             </div>
                     
+        </div>
+        <style>
+            {`
+        .container {
+            font-family: Segoe UI, Arial, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            padding: 30px;
+        }
+        .header {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .thingsToDo {
+            background: #fff;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            margin-bottom: 24px;
+        }
+        .select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-bottom: 16px;
+        }
+        .filmSearch {
+            background: #e9ecef;
+            padding: 18px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .searchForm {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .input {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .button {
+            padding: 10px 18px;
+            border-radius: 4px;
+            border: none;
+            background: #007bff;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+        .filmResults {
+            margin-top: 32px;
+        }
+        .filmDetails {
+            background: #fff;
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }`}
+        </style>
         </div>
     )
 }

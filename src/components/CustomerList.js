@@ -56,7 +56,8 @@ const CustomerList = (props) => {
     
     return (
         <div>
-            <button className='search' onClick={fetchCustomers}>Search:</button>
+            {//<button className='search' onClick={fetchCustomers}>Search:</button>
+            }
             {customers && 
                 customers.map((customer) => (
                     <div key={customer.customer_id} className="customerCard">
@@ -67,7 +68,7 @@ const CustomerList = (props) => {
                         <p><strong>Active:</strong> {customer.active ? 'Yes' : 'No'}</p>
                         <p><strong>Create Date:</strong> {new Date(customer.create_date).toLocaleDateString()}</p>
                         {customer.last_update && <p><strong>Last Update:</strong> {new Date(customer.last_update).toLocaleDateString()}</p>}
-                        <button onClick={()=>{console.log(customer.customer_id)}}>Delete</button>
+                        {/*<button onClick={()=>{console.log(customer.customer_id)}}>Delete</button>*/}
                     </div>
                 ))
             }

@@ -83,6 +83,7 @@ function Customers(){
     const submitCustomer = async()=>{
         try{
             console.log(newAddr)
+            var potentiality=customerData.address_id
             if(newAddr){
                 if(address1===""||address2===""||district==="")
                 {console.log('no')}
@@ -98,14 +99,14 @@ function Customers(){
                 });
                 if (!result1.ok) throw new Error('Failed to fetch search results');
                 const data = await result1.json();
-                customerData.address_id=data.item.insertId
+                potentiality=data.item.insertId
             }
             customerData.first_name=customerData.first_name.toUpperCase()
             customerData.last_name=customerData.last_name.toUpperCase()
             customerData.email=`${customerData.first_name}.${customerData.last_name}@sakilacustomer.org`
-            customerData.address_id=chosenExistAddr
+            customerData.address_id=potentiality
+            console.log("THIS IS THE CUSTOMER DATA: ", JSON.stringify(customerData))
             if (customerData.first_name===""||customerData.last_name==="") {throw new Error('Empty fields');}
-            console.log(JSON.stringify(customerData))
             const result1 = await fetch("http://localhost:3000/api/films/customers/insert", {
                     method: 'POST',
                     headers: {
@@ -233,24 +234,17 @@ function Customers(){
         fetchCountriesAndAddr();
     },[]); 
     return(
-        <div ref={myRef}>
-            {<CustomerDetails customerID={selectedCustomer}/>}
+        <div ref={myRef} className='principalDiv'>
             <h1>Welcome to video rental webiste customer page!</h1>
-            <h2>Here, you can:</h2>
-            <ul>
-                <li>view a list of all customers (Pref. using pagination)</li>
-                <li>filter/search customers by their customer id, first name or last name</li>
-                <li>add a new customer</li>
-                <li>update a customer's information</li>
-                <li>delete a customer if they no longer want to be a patron</li>
-                <li>view customer details and see their past and present rental history</li>
-                <li>indicate that a customer has returned a rented movie</li>
-            </ul>
             <label htmlFor="thingsToDo">Things you can do as a customer:</label>
             <ol className="thingsToDo">
-                <li>Look up films by name of film, name of an actor, or genre of the film</li>
-                <li>View details of the film</li>
-                <li>Rent out a film to a customer</li>
+                <li>View a list of all customers</li>
+                <li>Filter/search customers by their customer id, first name or last name</li>
+                <li>Add a new customer</li>
+                <li>Edit a customer’s details</li>
+                <li>Delete a customer if they no longer wish to patron at store</li>
+                <li>View customer details and see their past and present rental history</li>
+                <li>Indicate that a customer has returned a rented movie</li>
             </ol>
             <form className="searchForm" onSubmit={handleSearchClick}>
                 <label htmlFor="searchBy">Search by:</label>
@@ -268,6 +262,7 @@ function Customers(){
                     placeholder="Enter search term"/>
                     <button type="submit" disabled={searchBy==="skip"}>Search Customers</button>
             </form>
+            {<CustomerDetails customerID={selectedCustomer}/>}
             {showSearchResults && (
                 <div className="customerList searchResults">
                     <h2>Search Results</h2>
@@ -396,10 +391,9 @@ function Customers(){
                     <input type="number" disabled={!newAddr} step="any" name="long" id="long" placeholder="Longitude" 
                     onChange={handleAddr1Change}/>
                     <br/>
-                    <button >Add Customer</button>
+                    <button ></button>
                 </form>
-                <button onClick={submitCustomer} disabled={(customerData.first_name==="")||(customerData.last_name==="")||(newAddr&&(address1===""||district===""))}>test</button>
-                <button onClick={()=>{console.log(newAddr)}}>test</button>
+                <button onClick={submitCustomer} disabled={(customerData.first_name==="")||(customerData.last_name==="")||(newAddr&&(address1===""||district===""))}>Submit</button>
             </div>
             <style>{`
                 .customerList{
@@ -408,10 +402,17 @@ function Customers(){
                     margin: 10px;
                     max-height: 500px;
                     overflow-y: scroll;
+                    
                 }
                     .searchResults {
                     border-color: blue;
-                    background: #eef6ff;
+                    background: gold;
+                color:blue;
+                margins:5px;
+                padding:15px;
+                border:5px solid red;
+                border-radius: 10px;
+                text-align: center;
                 }
 
             `}</style>

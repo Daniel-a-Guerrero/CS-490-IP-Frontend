@@ -53,7 +53,8 @@ function CustomerDetails(props) {
 
     return (
         <div>
-            <button onClick={()=>{console.log(customer.first_name)}}>Testing</button>
+            <div className='superTotal'>
+            <div className='classForCD'>
             {/* */}<h2>Customer Details</h2>
             <p><strong>ID:</strong> {props.customerID}</p>
             <p><strong>Name:</strong> {`${customer.first_name}`}</p>
@@ -67,17 +68,44 @@ function CustomerDetails(props) {
             <br/>
             <p><strong>Rental History:</strong></p>
             <p>Outstanding rentals: {outstanding}</p>
-            <div className='customerList'>
-            {rentals && rentals.map((rental)=>(
-                <div key={rental.rental_id} className='rentalDetails'>
-                    <p><strong>Rental ID: </strong>{rental?.rental_id} (Inventory ID: {rental?.inventory_id})</p>
-                    <p><strong>Rented film: </strong>{rental?.title}</p>
-                    <p><strong>Rental time: </strong>{rental?.rental_date} - {rental.return_date?rental.return_date:'present'}</p>
-                    <br/>
-                </div>
-            ))}
             </div>
-             {/*Add more fields as needed */}
+            <div className='customerList'>
+                {rentals && rentals.map((rental)=>(
+                    <div key={rental.rental_id} className='rentalDetails'>
+                        <p><strong>Rental ID: </strong>{rental?.rental_id} (Inventory ID: {rental?.inventory_id})</p>
+                        <p><strong>Rented film: </strong>{rental?.title}</p>
+                        <p><strong>Rental time: </strong>{rental?.rental_date} - {rental.return_date?rental.return_date:'present'}</p>
+                        <br/>
+                    </div>
+                ))}
+             </div>
+             </div>
+             <style>{`
+             .classForCD{
+             color:blue;
+             margins:5px;
+             padding:15px;
+             border:5px solid red;
+             border-radius: 10px;
+             text-align: center;
+             }
+             .superTotal{
+             background-color:yellow;}
+
+             .customerList{
+             background-color:blue;}
+             
+             .rentalDetails{
+             border:2px dotted beige;
+             margins:5px;
+             padding:15px;
+            color:pink;
+            transition: color 0.3s ease, background-color 0.3s ease;
+             }
+            .rentalDetails:hover{
+            color:lightgreen
+            }
+             `}</style>
         </div>
     );
 }

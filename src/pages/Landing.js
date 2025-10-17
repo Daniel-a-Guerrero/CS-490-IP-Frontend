@@ -58,26 +58,31 @@ function Landing(){
     }
 
     return(
-        <div>
+        <div className='principalDiv'>
             <h1>Welcome to video rental webiste landing page!</h1>
             <div className='topFive'>
-                <h2>Top five most popular films:</h2>
-                {
-                films && films.map((film)=>(
-                    <div
-                    key={film.film_id}
-                    onClick={()=>{handleFilm(film.film_id);console.log(`Recorded film value, debug attempt #2: `, film);}}
-                    style={{cursor: 'pointer'}}
-                    >
-                    <TopFive film={film}/>
-                    </div>
-                ))}
+                <div className='topList'>
+                    <h2>Top five most popular films:</h2>
+                    {
+                    films && films.map((film)=>(
+                        <div
+                        key={film.film_id} className='topFiveFilmClass'
+                        onClick={()=>{handleFilm(film.film_id);console.log(`Recorded film value, debug attempt #2: `, film);}}
+                        style={{cursor: 'pointer'}}
+                        >
+                        <TopFive film={film}/>
+                        </div>
+                    ))}
+                </div>
+                <div className='topSel'>
                  {selectedFilm && (
                 <div className='filmDetails'>
                     <SelectedTop film={{selectedFilm}}/>
                 </div>
             )}
+                </div>
             </div>
+            <div className='topFiveAct'>
             <div className='topActors'>
             <h2>Top five most popular actors:</h2>
                 {actors && actors.map((actor)=>(
@@ -95,7 +100,7 @@ function Landing(){
                 <div>
                     <ActorDetails actor={selectedActor}/>
                     </div>)}
-            </div>
+            </div></div>
             <div className='actorFilms'>
             {actorFilms && actorFilms.map((topFilm)=>(
                     <div
@@ -108,6 +113,42 @@ function Landing(){
             </div>
             <style>
                 {`
+                .topFive {
+                      display: flex;
+                      gap: 1rem;
+                      align-items: flex-start;
+                      padding: 1rem 0;
+                      background-color:blue;
+                    }
+                .topList {
+                  flex: 0 0 320px;     
+                  max-height: 70vh;
+                  overflow-y: auto;
+                  border-right: 1px solid #ddd;
+                  padding-right: 1rem;
+                  box-sizing: border-box;
+                }
+                  .topActors{
+                    background-color:blue
+                  }
+                  .actorDetails {
+                  background-color:blue} 
+                  .topFiveFilmClass{
+                  color:grey;
+                  transition: color 0.3s ease, background-color 0.3s ease;
+                  }
+                  .topFiveFilmClass:hover{
+                  color:red
+                  }
+                .topSel {
+                    flex: 1 1 0;      
+                    min-width: 280px;
+                    padding-left: 1rem;
+                }
+                .emptySelected {
+                color: #666;
+                padding: 1rem;
+                }
                 .topFive, .topActors, .actorFilms{
                     border: 2px solid black;
                     margin: 10px;
@@ -118,6 +159,8 @@ function Landing(){
                     margin: 10px;
                     padding: 10px;
                 }
+                    h2{
+                    color:grey}
                 `}
             </style>
         </div>
